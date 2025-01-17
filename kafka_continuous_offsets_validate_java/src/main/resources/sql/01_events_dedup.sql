@@ -10,5 +10,5 @@ SELECT kafka_partition,
        kafka_offset
   FROM events
  WHERE event_dt >= '$$start_date$$'
-   AND kafka_offset >= '$$start_offset$$'
+   AND kafka_offset >= $$start_offset$$
 
