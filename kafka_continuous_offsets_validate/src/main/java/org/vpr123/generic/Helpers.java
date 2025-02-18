@@ -19,7 +19,6 @@ public class Helpers {
         System.out.println("\n-- " + view_name + "\n");
         df.createOrReplaceTempView(view_name);
         df.printSchema();
-        //df.show();
     }
 
     public static String getSQL(String file_path) throws IOException {
@@ -35,7 +34,6 @@ public class Helpers {
         System.out.println("\n" + s);
         Dataset<Row> res = spark.sql(s);
         res.printSchema();
-        //res.show();
         return res;
     }
 
@@ -48,7 +46,6 @@ public class Helpers {
 
         res.createOrReplaceTempView(view_name);
         res.printSchema();
-        //res.show();
     }
 
     public static void runSQL(SparkSession spark, String file_path, String params[][], String view_name) throws IOException {
@@ -63,7 +60,6 @@ public class Helpers {
         Dataset<Row> res = spark.sql(s);
         res.createOrReplaceTempView(view_name);
         res.printSchema();
-        //res.show();
     }
 
     public static void runQuery(SparkSession spark, String query) throws IOException {
