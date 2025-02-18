@@ -2,31 +2,17 @@ package org.vpr123.generic;
 
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SparkSession;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
-public class Utils {
+public class Helpers {
 
-    public static List<Row> getResourceData(String file_path) throws IOException {
-
-        InputStream is = Utils.class.getClassLoader().getResourceAsStream(file_path);
-        if (is == null) {
-            throw new FileNotFoundException("file not found! " + file_path);
-        }
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-        String line = null;
-        List<Row> result = new ArrayList<Row>();
-        while ((line = reader.readLine()) != null) {
-        }
-        result.add(RowFactory.create(line.split(",")));
-        return result;
+    public static void say(String txt) {
+        //log.info("===> " + txt);
+        System.out.println("===> " + txt);
     }
 
     public static void createView(Dataset<Row> df, String view_name) {
@@ -37,7 +23,7 @@ public class Utils {
     }
 
     public static String getSQL(String file_path) throws IOException {
-        InputStream is = Utils.class.getClassLoader().getResourceAsStream(file_path);
+        InputStream is = Helpers.class.getClassLoader().getResourceAsStream(file_path);
         if (is == null) {
             throw new FileNotFoundException("file not found!" + file_path);
         }
@@ -45,7 +31,7 @@ public class Utils {
     }
 
     public static Dataset<Row> runSQL (SparkSession spark, String file_path) throws IOException {
-        String s = Utils.getSQL (file_path);
+        String s = Helpers.getSQL (file_path);
         System.out.println("\n" + s);
         Dataset<Row> res = spark.sql(s);
         res.printSchema();
@@ -57,6 +43,9 @@ public class Utils {
         String s = getSQL (file_path);
         System.out.println("\n-- " + view_name + "\n" + s);
         Dataset<Row> res = spark.sql(s);
+
+        res.cache();
+
         res.createOrReplaceTempView(view_name);
         res.printSchema();
         //res.show();
@@ -75,6 +64,18 @@ public class Utils {
         res.createOrReplaceTempView(view_name);
         res.printSchema();
         //res.show();
+    }
+
+    public static void runQuery(SparkSession spark, String query) throws IOException {
+        System.out.println("\n===> " + query + "\n");
+        Dataset<Row> res = spark.sql(query);
+        res.show(100, false);
+    }
+
+    public static void runQuery(SparkSession spark, String query, int num_rows) throws IOException {
+        System.out.println("\n===> " + query + "\n");
+        Dataset<Row> res = spark.sql(query);
+        res.show(num_rows, false);
     }
 
 }
